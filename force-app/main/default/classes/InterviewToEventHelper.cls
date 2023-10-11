@@ -22,10 +22,10 @@ public class InterviewToEventHelper {
                                   '\nInterview Format: ' + interview.Interview_Format__c +
                                   '\nNotes: ' + interview.Notes__c;
             
-            // Add the newly created Event to the list
+            // Add the new Event to the list
             eventList.add(newEvent);
         }
-        // Return the list of created Events
+        // Return the list of Events
         return eventList;
     }
 }
