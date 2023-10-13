@@ -72,9 +72,45 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
                 tasks.add(reftsk);
             }
              
-         }
-             insert tasks;
+            else if (jobApp.Status__c == 'Saved') {
+
+                // Check if the job description aligns with your interests and values
+                Task task1 = new Task();
+                task1.Subject = 'Check if the job description aligns with your interests and values';
+                task1.Priority = 'High';
+                task1.Status = 'Not Started';
+                task1.WhatId = jobApp.Id;
+                task1.WhoId = jobApp.Primary_Contact__c;
+                task1.OwnerId = jobApp.OwnerId;
+                task1.ActivityDate = Date.today().addDays(2);
+                tasks.add(task1);
+    
+                // Review the highlighted skills to see if the role is a good fit
+                Task task2 = new Task();
+                task2.Subject = 'Review the highlighted skills to see if the role is a good fit';
+                task2.Priority = 'Normal';
+                task2.Status = 'Not Started';
+                task2.WhatId = jobApp.Id;
+                task2.WhoId = jobApp.Primary_Contact__c;
+                task2.OwnerId = jobApp.OwnerId;
+                task2.ActivityDate = Date.today().addDays(3);
+                tasks.add(task2);
+    
+                //Research the company or role and mark your excitement level
+                Task task3 = new Task();
+                task3.Subject = 'Research the company or role and mark your excitement level';
+                task3.Priority = 'Normal';
+                task3.Status = 'Not Started';
+                task3.WhatId = jobApp.Id;
+                task3.WhoId = jobApp.Primary_Contact__c;
+                task3.OwnerId = jobApp.OwnerId;
+                task3.ActivityDate = Date.today().addDays(4);
+                tasks.add(task3);
+        }
     }
+    insert tasks;
+
+}
    
     public override void afterDelete()
     {}
