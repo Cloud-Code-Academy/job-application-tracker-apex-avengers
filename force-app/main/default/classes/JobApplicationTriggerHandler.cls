@@ -19,6 +19,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     {
          // Create a new Task for newly inserted job application
          List<Task> tasks = new List<Task>();
+        
          for (Job_Applications__c jobApp : this.jobAppList){
 
              Task tsk = new Task();
@@ -33,12 +34,36 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
 
     }
 
-    public override void beforeInsert()
-    {}
+    
+    //automation to set the primary contact on the job application if the primary contact is null
     public override void beforeUpdate()
-    {}
-    public override void beforeDelete()
-    {}
+    {
+
+        Set<Id> jobAppIds = new Set<Id>();
+        for(Job_Applications__c job : this.jobAppList){
+            jobAppIds.add(job.Id);
+        }
+    
+        Map<Id, Contact> contacts = new Map<Id, Contact>([SELECT Id, LastName, Job_Application_Contacts__r.Id  FROM Contact WHERE Job_Application_Contacts__r.Id IN :jobAppIds]);
+        Map<Id, Contact> jobIdToContact = new Map<Id, Contact>();
+
+        for (Contact cont : contacts.values()) {
+            if (!jobIdToContact.containsKey(cont.Job_Application_Contacts__r.Id)) {
+                jobIdToContact.put(cont.Job_Application_Contacts__r.Id, cont);
+            }
+        }
+
+        for(Job_Applications__c jobApp : this.jobAppList){
+            if(jobApp.Primary_Contact__c == null){
+                if (jobIdToContact.containsKey(jobApp.Id)){
+                    jobApp.Primary_Contact__c = jobIdToContact.get(jobApp.Id).Id;
+                }
+            }
+        }
+       
+    }
+   
+
     public override void afterUpdate()
     {
 
@@ -83,33 +108,24 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
 
             }
 
-            if (jobApp.Status__c == 'Applying')
+            else if (jobApp.Status__c == 'Applying')
             {
-                //Task for setting up an interview.
-                Task tsk = new Task();
-                tsk.Subject = 'Set up an informational interview.';
-                tsk.Priority = 'Normal';
-                tsk.Status = 'Not Started';
-                tsk.WhatId = jobApp.Id;
-                tsk.WhoId = jobApp.Primary_Contact__c;
-                tsk.OwnerId = jobApp.OwnerId;
-                tsk.ActivityDate = Date.today().addDays(15);
-                tasks.add(tsk);
-
-                //Task to find a referral
-                Task reftsk = new Task();
-                reftsk.Subject = 'Identify potential referrals.';
-                reftsk.Priority = 'Normal';
-                reftsk.Status = 'Not Started';
-                reftsk.WhatId = jobApp.Id;
-                reftsk.WhoId = jobApp.Primary_Contact__c;
-                reftsk.OwnerId = jobApp.OwnerId;
-                reftsk.ActivityDate = Date.today().addDays(15);
-
-                tasks.add(reftsk);
+                tasks =  JobApplicationHelper.tasksWhenApplying(tasks,jobApp);
+            }
+            else if(jobApp.Status__c == 'Applied')
+            {
+                tasks =  JobApplicationHelper.tasksWhenApplied(tasks,jobApp);
+            }
+            else if(jobApp.Status__c == 'Accepted')
+            {
+                tasks =  JobApplicationHelper.tasksWhenAccepted(tasks,jobApp);
+            }
+            else if(jobApp.Status__c == 'Closed')
+            {
+                tasks =  JobApplicationHelper.tasksWhenClosed(tasks,jobApp);
             }
 
-            if (jobApp.Status__c == 'Interviewing') {
+            else if (jobApp.Status__c == 'Interviewing') {
 
                 // Prepare your blurb or “tell me about yourself” response
                 Task taskinterviewing1 = new Task();
@@ -212,6 +228,10 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     {}
    
     public override void afterUndelete()
+    {}
+    public override void beforeDelete()
+    {}
+    public override void beforeInsert()
     {}
    
 }
