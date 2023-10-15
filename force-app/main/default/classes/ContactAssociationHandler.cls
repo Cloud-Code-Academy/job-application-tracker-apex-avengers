@@ -21,7 +21,10 @@ public class ContactAssociationHandler {
         if (!jobApplicationIds.isEmpty()) {
 
             // Call the helper method in the ContactAssociationHelper class to perform the association
-            ContactAssociationHelper.associateContactsWithJobApplications(jobApplicationIds);
+            ContactAssociationHandler.associateContactsWithJobApplications(jobApplicationIds);
         }
     }
+
+	public static void associateContactsWithJobApplications(Set<Id> jobApplicationIds){
+	} 
 }
