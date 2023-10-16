@@ -13,7 +13,7 @@ public class ContactAssociationHandler {
             if (newContacts.get(contactId).Job_Application_Contacts__c != oldContacts.get(contactId).Job_Application_Contacts__c) {
 
                 // Add the Job Application's ID to the set for further processing
-                jobApplicationIds.add(newContacts.get(contactId).Job_Application__c);
+                jobApplicationIds.add(newContacts.get(contactId).Job_Application_Contacts__c);
             }
         }
 
