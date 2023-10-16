@@ -9,7 +9,7 @@ public class ContactAssociationHandler {
         // Loop through the updated Contact records and check for changes in the Job Application lookup field
         for (Id contactId : newContacts.keySet()) {
 
-            // Compare the Job_Application__c field in the new and old Contact records
+            // Compare the Job_Application_Contacts__c field in the new and old Contact records
             if (newContacts.get(contactId).Job_Application_Contacts__c != oldContacts.get(contactId).Job_Application_Contacts__c) {
 
                 // Add the Job Application's ID to the set for further processing
