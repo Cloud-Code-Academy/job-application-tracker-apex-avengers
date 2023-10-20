@@ -1,6 +1,7 @@
-public class EmailReminder implements Schedulable {
+public class EmailReminderScheduledJob implements Schedulable {
 
     public void execute(SchedulableContext context) {
+
         // Calculate the date for one day before the scheduled interviews
         Date reminderDate = Date.today().addDays(1);
 
@@ -39,5 +40,17 @@ public class EmailReminder implements Schedulable {
                 }
             }
         }
+    }
+
+    @future(callout=true)
+    public static void scheduleJob() {
+        String jobName = 'InterviewReminderJob';
+        String cronExpression = '0 0 8 * * ?';
+
+        // Check if the job with the same name already exists and unschedule it
+        System.abortJob(jobName);
+
+        // Schedule the job
+        System.schedule(jobName, cronExpression, new EmailReminder());
     }
 }
