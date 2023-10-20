@@ -1,7 +1,11 @@
-trigger InterviewToEventTrigger on Interview__c (after insert) {
-    List<Event> events = InterviewToEventHelper.createEventsFromInterviews(Trigger.new);
-    
-    if (!events.isEmpty()) {
-        insert events;
+trigger InterviewToEventTrigger on Interview__c (before insert) {
+    try {
+        List<Event> events = InterviewToEventHelper.createEventsFromInterviews(Trigger.new);
+
+        if (!events.isEmpty()) {
+            insert events;
+        }
+    } catch (Exception e) {
+        System.debug('Error Message: ' + e.getMessage());
     }
 }
