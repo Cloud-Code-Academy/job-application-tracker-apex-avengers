@@ -44,6 +44,7 @@ public class JoobleIntegration {
             Job_Applications__c jobApp = new Job_Applications__c();
             jobApp.Position_Title__c = jobTitle;
             jobApp.Company_Name__c = company;
+            jobApp.Status__c = 'Saved';
 
             jobApplications.add(jobApp);
         }
