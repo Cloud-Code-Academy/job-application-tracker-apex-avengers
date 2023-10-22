@@ -1,8 +1,12 @@
 public with sharing class JoobleIntegration {
-    @future (callout = true)
 
+    @future(callout = true)
     public static void retrieveJobs() {
         String endpoint = 'https://jooble.org/api/e6844abd-f8f3-4df7-9f49-d7685208f3ed';
+
+        // Set default search criteria
+        String keywords = 'salesforce developer';
+        String location = 'remote';
 
         // Make a callout to Jooble API
         HttpRequest request = new HttpRequest();
@@ -11,12 +15,18 @@ public with sharing class JoobleIntegration {
         request.setHeader('Content-Type', 'application/json');
 
         // Set query parameters
-        String keywords = 'Salesforce Developer, Apex, Visualforce, Lightning';
-        String location = 'Remote';
+        Map<String, String> params = new Map<String, String>();
+        params.put('keywords', keywords);
+        params.put('location', location);
 
-        request.setEndpoint(endpoint + '?keywords=' + keywords + '&location=' + location);
+        String queryString = 'keywords=' + keywords + '&location=' + location;
+
+        request.setEndpoint(endpoint + '?' + queryString);
 
         HttpResponse response = new Http().send(request);
+
+        System.debug('Response Status Code: ' + response.getStatusCode());
+        System.debug('Response Body: ' + response.getBody());
 
         if (response.getStatusCode() == 200) {
             // Process the API response and create Job Applications
@@ -36,19 +46,28 @@ public with sharing class JoobleIntegration {
         // Parse the JSON response
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
 
-        if (jsonResponse.containsKey('title')) {
+        System.debug('JSON Response: ' + jsonResponse);
 
-            String jobTitle = (String)jsonResponse.get('title');
-            String company = (String)jsonResponse.get('company');
+        if (jsonResponse.containsKey('jobs')) {
+            List<Object> jobs = (List<Object>) jsonResponse.get('jobs');
+            for (Object job : jobs) {
+                if (job instanceof Map<String, Object>) {
+                    Map<String, Object> jobMap = (Map<String, Object>) job;
+                    String jobTitle = (String) jobMap.get('title');
+                    String company = (String) jobMap.get('company');
 
-            // Create a new Job Application record
-            Job_Applications__c jobApp = new Job_Applications__c();
-            jobApp.Position_Title__c = jobTitle;
-            jobApp.Company_Name__c = company;
-            jobApp.Status__c = 'Saved';
+                    System.debug('Job Title: ' + jobTitle);
+                    System.debug('Company: ' + company);
 
+                    // Create a new Job Application record
+                    Job_Applications__c jobApp = new Job_Applications__c();
+                    jobApp.Position_Title__c = jobTitle;
+                    jobApp.Company_Name__c = company;
+                    jobApp.Status__c = 'Saved';
 
-            jobApplications.add(jobApp);
+                    jobApplications.add(jobApp);
+                }
+            }
         }
 
         return jobApplications;
@@ -56,15 +75,16 @@ public with sharing class JoobleIntegration {
 
     @future
     public static void cleanupStaleJobApplications() {
-
         // Calculate the date 30 days ago
         Date thirtyDaysAgo = System.today().addDays(-30);
 
-        // Query the Jop Apps
+        // Query the Job Apps
         List<Job_Applications__c> staleJobApplications = [SELECT Id FROM Job_Applications__c
                                                          WHERE Status__c NOT IN ('Closed', 'Accepted')
                                                          AND LastModifiedDate < :thirtyDaysAgo];
-                                                
+
+        System.debug('Stale Job Applications: ' + staleJobApplications);
+
         if (!staleJobApplications.isEmpty()) {
             List<Job_Applications__c> applicationsToUpdate = new List<Job_Applications__c>();
 
