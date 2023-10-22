@@ -32,6 +32,15 @@ public with sharing class JoobleIntegration {
         }
     }
 
+    private static Decimal extractSalary(String salaryString) {
+        // Remove non-numeric characters and split the string
+        salaryString = salaryString.replaceAll('[^0-9\\.]+', '');
+        if (String.isBlank(salaryString)) {
+            return null;
+        }
+        return Decimal.valueOf(salaryString);
+    }
+
     private static List<Job_Applications__c> processApiResponse(String responseBody) {
 
         List<Job_Applications__c> jobApplications = new List<Job_Applications__c>();
@@ -51,13 +60,10 @@ public with sharing class JoobleIntegration {
                     String jobUrl = (String) jobMap.get('link');
                     String jobLocation = (String) jobMap.get('location');
                     String salaryString = (String) jobMap.get('salary');
-        
+
                     // Convert salary to Decimal
-                    Decimal jobSalary;
-                    if (!String.isBlank(salaryString)) {
-                        jobSalary = Decimal.valueOf(salaryString);
-                    }
-        
+                    Decimal jobSalary = extractSalary(salaryString);
+
                     // Create a new Job Application record
                     Job_Applications__c jobApp = new Job_Applications__c();
                     jobApp.Application_Date__c = Date.today();
@@ -67,12 +73,12 @@ public with sharing class JoobleIntegration {
                     jobApp.URL__c = jobUrl;
                     jobApp.Location__c = jobLocation;
                     jobApp.Salary__c = jobSalary;
-        
+
                     jobApplications.add(jobApp);
                 }
             }
         }
-        
+
         return jobApplications;
     }
 
