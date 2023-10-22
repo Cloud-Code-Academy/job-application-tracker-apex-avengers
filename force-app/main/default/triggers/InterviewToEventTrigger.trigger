@@ -1,12 +1,14 @@
-trigger InterviewToEventTrigger on Interview__c (after insert, before insert, before update) {
-    List<Event> events = InterviewToEventHelper.createEventsFromInterviews(Trigger.new);
-    
-    if(Trigger.isAfter && Trigger.isInsert)
-    {
+trigger InterviewToEventTrigger on Interview__c (before insert) {
+    try {
+        List<Event> events = InterviewToEventHelper.createEventsFromInterviews(Trigger.new);
+
         if (!events.isEmpty()) {
             insert events;
         }
+    } catch (Exception e) {
+        System.debug('Error Message: ' + e.getMessage());
     }
+
     
     if(Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate))
     {
