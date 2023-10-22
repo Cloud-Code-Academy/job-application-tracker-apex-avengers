@@ -5,23 +5,16 @@ public with sharing class JoobleIntegration {
         String endpoint = 'https://jooble.org/api/e6844abd-f8f3-4df7-9f49-d7685208f3ed';
 
         // Set default search criteria
-        String keywords = 'salesforce developer';
-        String location = 'remote';
+        Map<String, String> params = new Map<String, String>();
+        params.put('keywords', 'salesforce developer');
+        params.put('location', 'remote');
 
         // Make a callout to Jooble API
         HttpRequest request = new HttpRequest();
         request.setEndpoint(endpoint);
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json');
-
-        // Set query parameters
-        Map<String, String> params = new Map<String, String>();
-        params.put('keywords', keywords);
-        params.put('location', location);
-
-        String queryString = 'keywords=' + keywords + '&location=' + location;
-
-        request.setEndpoint(endpoint + '?' + queryString);
+        request.setBody(JSON.serialize(params));
 
         HttpResponse response = new Http().send(request);
 
