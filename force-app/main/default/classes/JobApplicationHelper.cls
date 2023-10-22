@@ -13,6 +13,39 @@ public with sharing class JobApplicationHelper {
          tsk.ActivityDate = Date.today().addDays(15);
          tasks.add(tsk);
 
+         // Task to Find and research someone
+         Task tsk2 = new Task();
+         tsk2.Subject = 'Find and research someone who works at the company and add them as a contact.';
+         tsk2.Priority = 'Normal';
+         tsk2.Status = 'Not Started';
+         tsk2.WhatId = jobApp.Id;
+         tsk2.WhoId = jobApp.Primary_Contact__c;
+         tsk2.OwnerId = jobApp.OwnerId;
+         tsk2.ActivityDate = Date.today().addDays(15);
+         tasks.add(tsk2);
+
+         // Task to Customize your work achievements using the job description keywords
+         Task tsk3 = new Task();
+         tsk3.Subject = 'Customize your work achievements using the job description keywords.';
+         tsk3.Priority = 'Normal';
+         tsk3.Status = 'Not Started';
+         tsk3.WhatId = jobApp.Id;
+         tsk3.WhoId = jobApp.Primary_Contact__c;
+         tsk3.OwnerId = jobApp.OwnerId;
+         tsk3.ActivityDate = Date.today().addDays(15);
+         tasks.add(tsk3);
+
+     //Task to Submit your application on the company website if possible
+         Task tsk4 = new Task();
+         tsk4.Subject = 'Submit your application on the company website if possible.';
+         tsk4.Priority = 'Normal';
+         tsk4.Status = 'Not Started';
+         tsk4.WhatId = jobApp.Id;
+         tsk4.WhoId = jobApp.Primary_Contact__c;
+         tsk4.OwnerId = jobApp.OwnerId;
+         tsk4.ActivityDate = Date.today().addDays(15);
+         tasks.add(tsk4);
+
          //Task to find a referral
          Task reftsk = new Task();
          reftsk.Subject = 'Identify potential referrals.';
@@ -40,6 +73,30 @@ public with sharing class JobApplicationHelper {
          tsk.OwnerId = jobApp.OwnerId;
          tsk.ActivityDate = Date.today().addDays(15);
          tasks.add(tsk);
+
+          //Task for Reach out to the hiring manager or recruiter.
+         Task tsk1 = new Task();
+         tsk1.Subject = 'Reach out to the hiring manager or recruiter.';
+         tsk1.Priority = 'Normal';
+         tsk1.Status = 'Not Started';
+         tsk1.WhatId = jobApp.Id;
+         tsk1.WhoId = jobApp.Primary_Contact__c;
+         tsk1.OwnerId = jobApp.OwnerId;
+         tsk1.ActivityDate = Date.today().addDays(15);
+         tasks.add(tsk1);
+
+   //Task for Continue identifying and saving similar job opportunities
+
+         Task tsk2 = new Task();
+         tsk2.Subject = 'Continue identifying and saving similar job opportunities.';
+         tsk2.Priority = 'Normal';
+         tsk2.Status = 'Not Started';
+         tsk2.WhatId = jobApp.Id;
+         tsk2.WhoId = jobApp.Primary_Contact__c;
+         tsk2.OwnerId = jobApp.OwnerId;
+         tsk2.ActivityDate = Date.today().addDays(15);
+         tasks.add(tsk2);
+
 
          //Task to find a referral
          Task reftsk = new Task();
