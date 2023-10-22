@@ -55,17 +55,20 @@ public with sharing class JoobleIntegration {
             for (Object job : jobs) {
                 if (job instanceof Map<String, Object>) {
                     Map<String, Object> jobMap = (Map<String, Object>) job;
+                    String jobName = (String) jobmap.get('title');
                     String jobTitle = (String) jobMap.get('title');
                     String company = (String) jobMap.get('company');
                     String jobUrl = (String) jobMap.get('link');
                     String jobLocation = (String) jobMap.get('location');
                     String salaryString = (String) jobMap.get('salary');
+                    String description = (String) jobMap.get('snippet');
 
                     // Convert salary to Decimal
                     Decimal jobSalary = extractSalary(salaryString);
 
                     // Create a new Job Application record
                     Job_Applications__c jobApp = new Job_Applications__c();
+                    jobApp.Name = jobTitle;
                     jobApp.Application_Date__c = Date.today();
                     jobApp.Position_Title__c = jobTitle;
                     jobApp.Company_Name__c = company;
@@ -73,6 +76,8 @@ public with sharing class JoobleIntegration {
                     jobApp.URL__c = jobUrl;
                     jobApp.Location__c = jobLocation;
                     jobApp.Salary__c = jobSalary;
+                    jobApp.Description__c = description;
+
 
                     jobApplications.add(jobApp);
                 }
