@@ -1,14 +1,14 @@
-public class JoobleIntegration {
+public with sharing class JoobleIntegration {
+    @future (callout = true)
 
     public static void retrieveJobs() {
-        String apiKey = 'e6844abd-f8f3-4df7-9f49-d7685208f3ed';
-        String endpoint = 'https://jooble.org/api';
+        String endpoint = 'https://jooble.org/api/e6844abd-f8f3-4df7-9f49-d7685208f3ed';
 
         // Make a callout to Jooble API
         HttpRequest request = new HttpRequest();
         request.setEndpoint(endpoint);
-        request.setMethod('GET');
-        request.setHeader('X-Api-Key', apiKey);
+        request.setMethod('POST');
+        request.setHeader('Content-Type', 'application/json');
 
         // Set query parameters
         String keywords = 'Salesforce Developer, Apex, Visualforce, Lightning';
@@ -30,13 +30,14 @@ public class JoobleIntegration {
     }
 
     private static List<Job_Applications__c> processApiResponse(String responseBody) {
+
         List<Job_Applications__c> jobApplications = new List<Job_Applications__c>();
 
         // Parse the JSON response
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
 
         if (jsonResponse.containsKey('title')) {
-            // Get relevant information
+
             String jobTitle = (String)jsonResponse.get('title');
             String company = (String)jsonResponse.get('company');
 
@@ -45,6 +46,7 @@ public class JoobleIntegration {
             jobApp.Position_Title__c = jobTitle;
             jobApp.Company_Name__c = company;
             jobApp.Status__c = 'Saved';
+
 
             jobApplications.add(jobApp);
         }
