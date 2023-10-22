@@ -3,7 +3,7 @@
     <fullName>Company_Name__c</fullName>
     <externalId>false</externalId>
     <label>Company Name</label>
-    <length>15</length>
+    <length>50</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>
