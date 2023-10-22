@@ -28,4 +28,22 @@ public class InterviewToEventHelper {
         // Return the list of Events
         return eventList;
     }
+
+
+    //To retreve all the already booked meetings for the day.
+    public static List<Event> getAllBookedSlots(List<Interview__c> interviews)
+    {
+        List<Datetime> startDateTimes = new List<Datetime>();
+
+        for(Interview__c interview : interviews)
+        {
+            startDateTimes.add(interview.Interview_Date_Time__c);
+
+        }
+
+        List<Event> bookedTimeSlots = [Select ID from Event where StartDateTime IN :startDateTimes];
+        
+        return bookedTimeSlots;
+         
+    }
 }
