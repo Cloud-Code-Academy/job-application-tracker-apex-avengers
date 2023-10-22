@@ -48,21 +48,31 @@ public with sharing class JoobleIntegration {
                     Map<String, Object> jobMap = (Map<String, Object>) job;
                     String jobTitle = (String) jobMap.get('title');
                     String company = (String) jobMap.get('company');
-
-                    System.debug('Job Title: ' + jobTitle);
-                    System.debug('Company: ' + company);
-
+                    String jobUrl = (String) jobMap.get('link');
+                    String jobLocation = (String) jobMap.get('location');
+                    String salaryString = (String) jobMap.get('salary');
+        
+                    // Convert salary to Decimal
+                    Decimal jobSalary;
+                    if (!String.isBlank(salaryString)) {
+                        jobSalary = Decimal.valueOf(salaryString);
+                    }
+        
                     // Create a new Job Application record
                     Job_Applications__c jobApp = new Job_Applications__c();
+                    jobApp.Application_Date__c = Date.today();
                     jobApp.Position_Title__c = jobTitle;
                     jobApp.Company_Name__c = company;
                     jobApp.Status__c = 'Saved';
-
+                    jobApp.URL__c = jobUrl;
+                    jobApp.Location__c = jobLocation;
+                    jobApp.Salary__c = jobSalary;
+        
                     jobApplications.add(jobApp);
                 }
             }
         }
-
+        
         return jobApplications;
     }
 
