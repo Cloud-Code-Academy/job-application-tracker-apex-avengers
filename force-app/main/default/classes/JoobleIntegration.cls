@@ -25,9 +25,9 @@ public with sharing class JoobleIntegration {
             // Process the API response and create Job Applications
             List<Job_Applications__c> jobApplications = processApiResponse(response.getBody());
 
-            // Insert the Job Applications
+            // Upsert Job Applications based on External ID
             if (!jobApplications.isEmpty()) {
-                insert jobApplications;
+                upsert jobApplications Job_Applications__c.Fields.External_ID__c;
             }
         }
     }
@@ -41,34 +41,42 @@ public with sharing class JoobleIntegration {
         return Decimal.valueOf(salaryString);
     }
 
+    private static String generateExternalID(String jobTitle, String company) {
+        // Generate a unique ID based on a combination of job title, company name, and current timestamp
+        String uniqueID = jobTitle + '-' + company + '-' + Datetime.now().getTime();
+        return uniqueID;
+    }
+
     private static List<Job_Applications__c> processApiResponse(String responseBody) {
 
         List<Job_Applications__c> jobApplications = new List<Job_Applications__c>();
-
+    
         // Parse the JSON response
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
-
+    
         System.debug('JSON Response: ' + jsonResponse);
-
+    
         if (jsonResponse.containsKey('jobs')) {
             List<Object> jobs = (List<Object>) jsonResponse.get('jobs');
             for (Object job : jobs) {
                 if (job instanceof Map<String, Object>) {
                     Map<String, Object> jobMap = (Map<String, Object>) job;
-                    String jobName = (String) jobmap.get('title');
                     String jobTitle = (String) jobMap.get('title');
                     String company = (String) jobMap.get('company');
                     String jobUrl = (String) jobMap.get('link');
                     String jobLocation = (String) jobMap.get('location');
                     String salaryString = (String) jobMap.get('salary');
                     String description = (String) jobMap.get('snippet');
-
+    
                     // Convert salary to Decimal
                     Decimal jobSalary = extractSalary(salaryString);
-
+    
+                    // Generate a unique External ID
+                    String externalID = generateExternalID(jobTitle, company);
+    
                     // Create a new Job Application record
                     Job_Applications__c jobApp = new Job_Applications__c();
-                    jobApp.Name = jobTitle;
+                    jobApp.External_ID__c = externalID;
                     jobApp.Application_Date__c = Date.today();
                     jobApp.Position_Title__c = jobTitle;
                     jobApp.Company_Name__c = company;
@@ -77,15 +85,25 @@ public with sharing class JoobleIntegration {
                     jobApp.Location__c = jobLocation;
                     jobApp.Salary__c = jobSalary;
                     jobApp.Description__c = description;
-
-
+    
                     jobApplications.add(jobApp);
                 }
             }
         }
-
+    
+        // Upsert the Job Applications based on the External_ID__c field
+        if (!jobApplications.isEmpty()) {
+            try {
+                upsert jobApplications Job_Applications__c.Fields.External_ID__c;
+            } catch (DmlException e) {
+                for (Integer i = 0; i < e.getNumDml(); i++) {
+                    System.debug('Error for record ' + e.getDmlId(i) + ': ' + e.getDmlMessage(i));
+                }
+            }
+        }
+    
         return jobApplications;
-    }
+    }    
 
     @future
     public static void cleanupStaleJobApplications() {
