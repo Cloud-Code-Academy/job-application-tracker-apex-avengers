@@ -42,7 +42,8 @@ public with sharing class JoobleIntegration {
     }
 
     private static String generateExternalID(String jobTitle, String company) {
-        // Generate a unique ID based on a combination of job title, company name, and current timestamp
+
+        // Generate a unique ID
         String uniqueID = jobTitle + '-' + company + '-' + Datetime.now().getTime();
         return uniqueID;
     }
@@ -61,23 +62,38 @@ public with sharing class JoobleIntegration {
             for (Object job : jobs) {
                 if (job instanceof Map<String, Object>) {
                     Map<String, Object> jobMap = (Map<String, Object>) job;
+                    String jobName = (String) jobmap.get('title');
                     String jobTitle = (String) jobMap.get('title');
                     String company = (String) jobMap.get('company');
                     String jobUrl = (String) jobMap.get('link');
                     String jobLocation = (String) jobMap.get('location');
                     String salaryString = (String) jobMap.get('salary');
                     String description = (String) jobMap.get('snippet');
+                    String lastUpdatedString = (String) jobMap.get('updated');
     
                     // Convert salary to Decimal
                     Decimal jobSalary = extractSalary(salaryString);
+
+                    // Convert lastUpdatedString to Datetime
+                    Datetime lastUpdated;
+
+                    if (lastUpdatedString != null) {
+                    // Remove fractional seconds and timezone information
+                    lastUpdatedString = lastUpdatedString.substringBefore('.');
+                    lastUpdatedString = lastUpdatedString.substringBefore('+');
     
+                    // Replace 'T' with space
+                    lastUpdatedString = lastUpdatedString.replace('T', ' ');
+    
+                    lastUpdated = Datetime.valueOfGmt(lastUpdatedString);
+            }                                    
                     // Generate a unique External ID
                     String externalID = generateExternalID(jobTitle, company);
     
                     // Create a new Job Application record
                     Job_Applications__c jobApp = new Job_Applications__c();
                     jobApp.External_ID__c = externalID;
-                    jobApp.Application_Date__c = Date.today();
+                    jobApp.Name = jobTitle;
                     jobApp.Position_Title__c = jobTitle;
                     jobApp.Company_Name__c = company;
                     jobApp.Status__c = 'Saved';
@@ -85,6 +101,7 @@ public with sharing class JoobleIntegration {
                     jobApp.Location__c = jobLocation;
                     jobApp.Salary__c = jobSalary;
                     jobApp.Description__c = description;
+                    jobApp.Job_Last_Updated__c = lastUpdated;
     
                     jobApplications.add(jobApp);
                 }
