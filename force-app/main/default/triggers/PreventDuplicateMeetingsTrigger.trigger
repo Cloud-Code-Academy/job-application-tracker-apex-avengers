@@ -11,10 +11,10 @@ trigger PreventDuplicateMeetingsTrigger on Event (before insert) {
     for (Event newEvent : trigger.new){
        if(newEvent.StartDateTime.format('EEEE') == 'Sunday' || newEvent.StartDateTime.format('EEEE') == 'Saturday')
        {
-            newEvent.addError('Choose other than weekends to book the meeting.');
+            newEvent.addError('Please choose a weekday. Weekends are unavailable.');
        }
        else if(!events.isEmpty()) { 
-            newEvent.addError('Please choose a different time slot..');
+            newEvent.addError('Unavailable. Please choose a different time slot.');
         }
        
         
