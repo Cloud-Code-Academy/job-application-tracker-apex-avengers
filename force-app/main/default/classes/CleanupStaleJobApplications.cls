@@ -8,7 +8,7 @@ public with sharing class CleanupStaleJobApplications {
     // Query the Job Apps
     List<Job_Applications__c> staleJobApplications = [SELECT Id FROM Job_Applications__c
                                                      WHERE Status__c NOT IN ('Closed', 'Accepted')
-                                                     AND LastModifiedDate < :thirtyDaysAgo];
+                                                     AND LastModifiedDate > :thirtyDaysAgo];
 
     System.debug('Stale Job Applications: ' + staleJobApplications);
 

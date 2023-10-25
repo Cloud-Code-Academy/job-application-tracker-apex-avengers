@@ -10,7 +10,7 @@ public class CleanupStaleJobApplicationsTest {
         
         for (Integer i = 0; i < 5; i++) {
             Job_Applications__c jobApp = new Job_Applications__c(
-                Status__c = 'Open',
+                Status__c = 'Closed',
                 Custom_LastModifiedDate__c = thirtyDaysAgo
             );
             jobApps.add(jobApp);
@@ -21,7 +21,7 @@ public class CleanupStaleJobApplicationsTest {
         List<Job_Applications__c> nonStaleJobApps = new List<Job_Applications__c>();
         for (Integer i = 0; i < 5; i++) {
             Job_Applications__c jobApp = new Job_Applications__c(
-                Status__c = 'Open',
+                Status__c = 'Saved',
                 Custom_LastModifiedDate__c = System.today().addDays(-15)
             );
             nonStaleJobApps.add(jobApp);
