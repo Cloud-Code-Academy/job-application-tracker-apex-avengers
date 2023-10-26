@@ -16,6 +16,7 @@ public class TakeHomePayEstimation {
         public Decimal weeklySalary;
         public Decimal halfYearSalary;
 
+       
         public TakeHomePayResult(Decimal yearlySalary, Decimal monthlySalary, Decimal biWeeklySalary, Decimal weeklySalary, Decimal halfYearSalary) {
             this.yearlySalary = yearlySalary;
             this.monthlySalary = monthlySalary;
@@ -55,11 +56,11 @@ public class TakeHomePayEstimation {
         Decimal yearlyMedicareWithholding = offeredSalary * MedicareWithholding;
 
         // Calculate yearly and monthly take-home pay
-        Decimal yearlyTakeHomePay = offeredSalary - yearlyFederalIncomeTax - yearlySocialSecurityTax - yearlyMedicareWithholding;
-        Decimal monthlyTakeHomePay = yearlyTakeHomePay / 12;
-        Decimal biWeeklyTakeHomePay = monthlyTakeHomePay * 12 / 26;
-        Decimal weeklyTakeHomePay = monthlyTakeHomePay * 12 / 52;
-        Decimal halfYearTakeHomePay = monthlyTakeHomePay * 6;
+        Decimal yearlyTakeHomePay = (offeredSalary - yearlyFederalIncomeTax - yearlySocialSecurityTax - yearlyMedicareWithholding).setScale(2);
+        Decimal monthlyTakeHomePay = (yearlyTakeHomePay / 12).setScale(2);
+        Decimal biWeeklyTakeHomePay = (monthlyTakeHomePay * 12 / 26).setScale(2);
+        Decimal weeklyTakeHomePay = (monthlyTakeHomePay * 12 / 52).setScale(2);
+        Decimal halfYearTakeHomePay = (monthlyTakeHomePay * 6).setScale(2);
 
         // Return the result
         return new TakeHomePayResult(yearlyTakeHomePay, monthlyTakeHomePay, biWeeklyTakeHomePay, weeklyTakeHomePay, halfYearTakeHomePay);
