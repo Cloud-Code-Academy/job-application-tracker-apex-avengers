@@ -3,6 +3,7 @@ public with sharing class JobApplicationTriggerHandlerTest {
 
     @isTest
      static void testJobApplicationRelatedTaskAfterInsert(){
+       
         Job_Applications__c[] jobAppList = new Job_Applications__c[] {
             new Job_Applications__c(Name = 'Salesforce Dev', Status__c = 'Saved'),
             new Job_Applications__c(Name = 'Salesforce Admin', Status__c = 'Applying'),
@@ -34,17 +35,8 @@ public with sharing class JobApplicationTriggerHandlerTest {
                 statusTasksMap.get(status).add(task);
             }
 
-        // List<Task> savedTasks = statusTasksMap.get('Saved');
-        // Boolean foundTask = false;
-        // for (Task task : savedTasks) {
-        //     if (task.Subject.equals('Check if the job description aligns with your interests and values'))
-        //     {
-        //         foundTask = true;
-        //         break;
-        //     }
-        // }
-
-       // System.assert(foundTask, 'Expected task subject not found for "Saved" status.');
+        List<Task> savedTasks = statusTasksMap.get('Saved');
+     
         Assert.areEqual(8, jobAppList.size(),'Expected 8 job applications to be saved');
         Assert.areEqual(1, statusTasksMap.get('Applying').size(), 'Expected 1 tasks for Applying status');
         Assert.areEqual(1, statusTasksMap.get('Applied').size(), 'Expected 1 tasks for Applied status');
@@ -58,6 +50,7 @@ public with sharing class JobApplicationTriggerHandlerTest {
     @isTest
     static void testJobApplicationRelatedTaskAfterStatusUpdate(){
         Job_Applications__c[] jobAppList = new Job_Applications__c[] {
+            new Job_Applications__c(Name = 'Salesforce Admin'),
             new Job_Applications__c(Name = 'Salesforce Dev', Status__c = 'Saved'),
             new Job_Applications__c(Name = 'Salesforce Admin', Status__c = 'Applying'),
             new Job_Applications__c(Name = 'Salesforce Dev', Status__c = 'Applied'),
@@ -102,6 +95,11 @@ public with sharing class JobApplicationTriggerHandlerTest {
             else if(jobApp.Status__c == 'Accepted')
             {
                 jobApp.Status__c = 'Closed';
+                jobsToUpdate.add(jobApp);
+            }
+            else if(jobApp.Status__c == null)
+            {
+                jobApp.Status__c = 'Saved';
                 jobsToUpdate.add(jobApp);
             }
         }
