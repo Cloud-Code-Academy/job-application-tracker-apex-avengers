@@ -13,12 +13,11 @@ public with sharing class JoobleIntegrationMock implements HttpCalloutMock {
         responseHeaders.put('Content-Type', 'application/json');
     }
 
-    public HTTPResponse respond(HTTPRequest req) {
-        HTTPResponse res = new HTTPResponse();
-        res.setStatusCode(code);
-        res.setStatus(status);
-        res.setBody(body);
-        res.setHeader('Content-Type', responseHeaders.get('Content-Type'));
+    public HttpResponse respond(HttpRequest req) {
+        HttpResponse res = new HttpResponse();
+        res.setStatusCode(200);
+       
+        res.setBody('{"totalCount":1,"jobs":[{"title":"Salesforce Developer","location":"Remote","snippet":"This is Job description...","salary":"4000","link":"https://joblink.com","company":"TechABC Inc.","id":"1234","updated":"2023-10-25T10:10:10Z"}]}');
         return res;
     }
 }

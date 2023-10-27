@@ -16,9 +16,9 @@ public with sharing class JoobleIntegrationTest {
         System.assertEquals(1, jobApps.size());
         Job_Applications__c jobApp = jobApps[0];
         System.assertEquals('Saved', jobApp.Status__c);
-        System.assertEquals('Job Title', jobApp.Name);
-        System.assertEquals('Company Name', jobApp.Company_Name__c);
-        System.assertEquals('Description', jobApp.Description__c);
+        System.assertEquals('Salesforce Developer', jobApp.Name);
+        System.assertEquals('TechABC Inc.', jobApp.Company_Name__c);
+        System.assertEquals('This is Job description...', jobApp.Description__c);
     }
 
     // Return the mock response as a JSON string
