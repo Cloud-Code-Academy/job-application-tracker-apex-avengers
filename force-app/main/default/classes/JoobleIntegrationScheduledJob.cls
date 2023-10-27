@@ -1,7 +1,9 @@
 public class JoobleIntegrationScheduledJob implements Schedulable {
 
     public void execute(SchedulableContext sc) {
-        //JoobleIntegration.retrieveJobs();
+        String keywords = 'Salesforce Developer';
+        String location = 'Remote';
+        JoobleIntegration.retrieveJobs(keywords, location);
     }
 
     public static void scheduleJob() {

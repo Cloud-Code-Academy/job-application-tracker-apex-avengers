@@ -3,7 +3,7 @@ public with sharing class JoobleIntegrationTest {
     @isTest
     static void testRetrieveJobs() {
 
-    Test.setMock(HttpCalloutMock.class, new JoobleIntegrationMock(200, 'OK', getMockResponse()));
+        Test.setMock(HttpCalloutMock.class, new JoobleIntegrationMock(200, 'OK', getMockResponse()));
  
         // Define the keywords and location
         String keywords = 'Salesforce Developer';
@@ -26,5 +26,18 @@ public with sharing class JoobleIntegrationTest {
         return '{"jobs": ['
             + '{}'
             + ']}';
+    }
+
+
+    @istest
+    public static void  testJoobleSchedule() 
+    {    
+        Test.setMock(HttpCalloutMock.class, new JoobleIntegrationMock(200, 'OK', getMockResponse()));
+         Test.StartTest();
+            JoobleIntegrationScheduledJob joobleSchJob = new JoobleIntegrationScheduledJob();      
+            String cron = '0 0 23 * * ?';
+            System.schedule('Test check', cron, joobleSchJob);
+            joobleSchJob.execute(null);
+         Test.stopTest();       
     }
 }
