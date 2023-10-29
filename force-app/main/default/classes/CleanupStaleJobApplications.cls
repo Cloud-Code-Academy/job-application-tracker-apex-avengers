@@ -1,6 +1,5 @@
 public with sharing class CleanupStaleJobApplications {
 
-    @future
     public static void cleanupStaleJobApps(){
     // Calculate the date 30 days ago
     Date thirtyDaysAgo = System.today().addDays(-30);
@@ -22,9 +21,14 @@ public with sharing class CleanupStaleJobApplications {
             applicationsToUpdate.add(jobApp);
         }
 
-        if (!applicationsToUpdate.isEmpty()) {
-            update applicationsToUpdate;
+        try{
+            if (!applicationsToUpdate.isEmpty()) {
+                update applicationsToUpdate;
+            }
         }
+       catch(DmlException de){
+            System.debug(de.getMessage());
+       }
+     }
     }
-}
 }

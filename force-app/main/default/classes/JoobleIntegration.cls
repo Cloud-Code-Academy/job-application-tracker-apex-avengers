@@ -8,6 +8,7 @@ public with sharing class JoobleIntegration {
         Map<String, String> params = new Map<String, String>();
         params.put('keywords', 'salesforce developer');
         params.put('location', 'remote');
+       
 
         // Make a callout to Jooble API
         HttpRequest request = new HttpRequest();
@@ -65,7 +66,7 @@ public with sharing class JoobleIntegration {
                     String jobName = (String) jobmap.get('title');
                     String jobTitle = (String) jobMap.get('title');
                     String company = (String) jobMap.get('company');
-                    String jobUrl = (String) jobMap.get('link');
+                    String jobUrl = ((String) jobMap.get('link')).substring(0,18);
                     String jobLocation = (String) jobMap.get('location');
                     String salaryString = (String) jobMap.get('salary');
                     String description = (String) jobMap.get('snippet');
