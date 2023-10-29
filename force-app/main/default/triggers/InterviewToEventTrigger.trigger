@@ -1,4 +1,5 @@
 trigger InterviewToEventTrigger on Interview__c (before insert) {
+    if (Trigger.isBefore && Trigger.isInsert) {
     try {
         List<Event> events = InterviewToEventHelper.createEventsFromInterviews(Trigger.new);
 
@@ -9,4 +10,5 @@ trigger InterviewToEventTrigger on Interview__c (before insert) {
         System.debug('Error Message: ' + e.getMessage());
     }
     
+    }
 }
