@@ -42,7 +42,6 @@ public class EmailReminderScheduledJob implements Schedulable {
         }
     }
 
-    @future(callout=true)
     public static void scheduleJob() {
         String jobName = 'InterviewReminderJob';
         String cronExpression = '0 0 8 * * ?';
