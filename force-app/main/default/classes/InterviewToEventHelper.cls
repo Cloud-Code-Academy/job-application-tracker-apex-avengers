@@ -1,11 +1,13 @@
 public class InterviewToEventHelper {
 
+    // Method to create events from interview records
     public static List<Event> createEventsFromInterviews(List<Interview__c> interviews) {
         List<Event> eventList = new List<Event>();
         
         for (Interview__c interview : interviews) {
             Event newEvent = new Event();
             
+            // Set the event subject based on the interview name
             newEvent.Subject = 'Interview for ' + interview.Name;
 
             if (interview.Interview_Date_Time__c != null) {
@@ -15,6 +17,7 @@ public class InterviewToEventHelper {
                 newEvent.ActivityDateTime = interview.Interview_Date_Time__c;
             }
             
+            // Fill out the event description with details from the interview
             newEvent.Description = 'Interview Type: ' + 
                                   (interview.Interview_Type__c != null ? interview.Interview_Type__c : 'N/A') +
                                   '\nInterviewer: ' + 
@@ -24,10 +27,11 @@ public class InterviewToEventHelper {
                                   '\nNotes: ' + 
                                   (interview.Notes__c != null ? interview.Notes__c : 'N/A');
 
-            
+            // Add the new event to the list
             eventList.add(newEvent);
         }
         
+        // Return the list of events
         return eventList;
     }
 
