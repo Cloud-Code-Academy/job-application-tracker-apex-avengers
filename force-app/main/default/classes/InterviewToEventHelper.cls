@@ -15,10 +15,15 @@ public class InterviewToEventHelper {
                 newEvent.ActivityDateTime = interview.Interview_Date_Time__c;
             }
             
-            newEvent.Description = 'Interview Type: ' + interview.Interview_Type__c +
-                                  '\nInterviewer: ' + interview.Interviewer__c +
-                                  '\nInterview Format: ' + interview.Interview_Format__c +
-                                  '\nNotes: ' + interview.Notes__c;
+            newEvent.Description = 'Interview Type: ' + 
+                                  (interview.Interview_Type__c != null ? interview.Interview_Type__c : 'N/A') +
+                                  '\nInterviewer: ' + 
+                                  (interview.Interviewer__c != null ? interview.Interviewer__c : 'N/A') +
+                                  '\nInterview Format: ' + 
+                                  (interview.Interview_Format__c != null ? interview.Interview_Format__c : 'N/A') +
+                                  '\nNotes: ' + 
+                                  (interview.Notes__c != null ? interview.Notes__c : 'N/A');
+
             
             eventList.add(newEvent);
         }
@@ -27,4 +32,3 @@ public class InterviewToEventHelper {
     }
 
 }
-
