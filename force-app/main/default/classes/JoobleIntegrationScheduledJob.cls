@@ -7,10 +7,8 @@ public class JoobleIntegrationScheduledJob implements Schedulable {
     }
 
     public static void scheduleJob() {
-        String CRON_EXP = '0 56 12 ? * *';
+        String CRON_EXP = '0 0 13 ? * *';
         JoobleIntegrationScheduledJob job = new JoobleIntegrationScheduledJob();
         String scheduledJobId = System.schedule('JoobleIntegrationJob', CRON_EXP, job);
     }
 }
-
-            
