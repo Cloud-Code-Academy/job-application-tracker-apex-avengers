@@ -34,7 +34,18 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
 
     }
 
-    
+    public override void beforeInsert()
+    {
+
+        for (Job_Applications__c jobApp : this.jobAppList){
+
+            if(jobApp.Status__c == null)
+            {
+                jobApp.Status__c = 'Saved';
+            }
+        }
+    }
+
     //automation to set the primary contact on the job application if the primary contact is null
     public override void beforeUpdate()
     {
@@ -246,7 +257,6 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
     {}
     public override void beforeDelete()
     {}
-    public override void beforeInsert()
-    {}
+   
    
 }
