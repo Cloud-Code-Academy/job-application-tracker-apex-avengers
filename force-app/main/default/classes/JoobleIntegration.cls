@@ -2,8 +2,9 @@ public with sharing class JoobleIntegration {
 
     @future(callout=true) 
     public static void retrieveJobs(String keywords, String location) {
-        String endpoint = 'callout:JoobleJobAPI'; //named credentials added.
-        //'https://jooble.org/api/e6844abd-f8f3-4df7-9f49-d7685208f3ed';
+        String endpoint = 'https://jooble.org/api/e6844abd-f8f3-4df7-9f49-d7685208f3ed';
+         //'callout:JoobleJobAPI'; //named credentials added.
+        
 
         // Set default search criteria
         Map<String, String> params = new Map<String, String>();
