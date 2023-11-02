@@ -26,12 +26,8 @@ public with sharing class JoobleIntegration {
 
         if (response.getStatusCode() == 200) {
             // Process the API response and create Job Applications
-            List<Job_Applications__c> jobApplications = processApiResponse(response.getBody());
+            processApiResponse(response.getBody());
 
-            // Upsert Job Applications based on External ID
-            if (!jobApplications.isEmpty()) {
-                upsert jobApplications Job_Applications__c.Fields.External_ID__c;
-            }
         }
     }
 
@@ -51,7 +47,7 @@ public with sharing class JoobleIntegration {
         return uniqueID;
     }
 
-    private static List<Job_Applications__c> processApiResponse(String responseBody) {
+    private static void processApiResponse(String responseBody) {
 
         List<Job_Applications__c> jobApplications = new List<Job_Applications__c>();
     
@@ -122,6 +118,5 @@ public with sharing class JoobleIntegration {
             }
         }
     
-        return jobApplications;
     }    
 }
