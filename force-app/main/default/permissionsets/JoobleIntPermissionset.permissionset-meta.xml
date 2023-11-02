@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <applicationVisibilities>
+        <application>standard__AllTabSet</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <description>Jooble Int Permission set</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>JoobleIntPermissionset</label>
+</PermissionSet>
