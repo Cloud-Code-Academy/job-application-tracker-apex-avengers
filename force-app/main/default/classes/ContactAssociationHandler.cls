@@ -28,9 +28,10 @@ public class ContactAssociationHandler {
     public static void associateContactsWithJobApplications(Set<Id> jobApplicationIds, Map<Id, Contact> newContacts) {
         List<Job_Applications__c> jobApplicationsToUpdate = new List<Job_Applications__c>();
 
+        // Retrieve the Job Application record
+        Job_Applications__c jobApplication = [SELECT Id, Associated_Contacts__c FROM Job_Applications__c WHERE Id = :jobApplicationIds];
+
         for (Id jobApplicationId : jobApplicationIds) {
-            // Retrieve the Job Application record
-            Job_Applications__c jobApplication = [SELECT Id, Associated_Contacts__c FROM Job_Applications__c WHERE Id = :jobApplicationId];
 
             // Verify the record was found
             if (jobApplication != null) {
